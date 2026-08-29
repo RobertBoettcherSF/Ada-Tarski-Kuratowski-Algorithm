@@ -21,7 +21,8 @@ package Tarski_Kuratowski is
    type Quantifier_Prefix is array (Positive range <>) of Quantifier;
 
    -- The resulting complexity classes (Σ, Π, Δ)
-   type Complexity_Class is (Sigma, Pi, Delta);
+   -- Renamed with Class_ prefix to avoid Ada's reserved word "delta"
+   type Complexity_Class is (Class_Sigma, Class_Pi, Class_Delta);
 
    -- The calculated upper bound complexity
    type Complexity_Bound is record

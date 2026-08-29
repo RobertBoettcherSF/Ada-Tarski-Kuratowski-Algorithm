@@ -9,12 +9,12 @@ package body Tarski_Kuratowski is
    -----------------------------------------------------------------------------
    function Evaluate_Arithmetical (Prefix : Quantifier_Prefix) return Complexity_Bound is
       Current_Level : Natural := 0;
-      Current_Class : Complexity_Class := Delta;
+      Current_Class : Complexity_Class := Class_Delta;
       Last_Q_Type   : Quantifier_Type;
    begin
       -- Base Case: Quantifier-free formulas are Δ^0_0
       if Prefix'Length = 0 then
-         return (Class => Delta, Level => 0, V_Order => First_Order);
+         return (Class => Class_Delta, Level => 0, V_Order => First_Order);
       end if;
 
       for I in Prefix'Range loop
@@ -28,9 +28,9 @@ package body Tarski_Kuratowski is
             Last_Q_Type := Prefix(I).Q_Type;
             Current_Level := 1;
             if Last_Q_Type = Existential then
-               Current_Class := Sigma;
+               Current_Class := Class_Sigma;
             else
-               Current_Class := Pi;
+               Current_Class := Class_Pi;
             end if;
          elsif Prefix(I).Q_Type /= Last_Q_Type then
             -- Alternation found: increase level and collapse blocks
@@ -50,12 +50,12 @@ package body Tarski_Kuratowski is
    -----------------------------------------------------------------------------
    function Evaluate_Analytical (Prefix : Quantifier_Prefix) return Complexity_Bound is
       Current_Level      : Natural := 0;
-      Current_Class      : Complexity_Class := Delta;
+      Current_Class      : Complexity_Class := Class_Delta;
       Last_Q_Type        : Quantifier_Type;
       Found_Second_Order : Boolean := False;
    begin
       if Prefix'Length = 0 then
-         return (Class => Delta, Level => 1, V_Order => Second_Order); -- Empty is Δ^1_1 generally
+         return (Class => Class_Delta, Level => 1, V_Order => Second_Order); -- Empty is Δ^1_1 generally
       end if;
 
       for I in Prefix'Range loop
@@ -68,9 +68,9 @@ package body Tarski_Kuratowski is
                Last_Q_Type := Prefix(I).Q_Type;
                Current_Level := 1;
                if Last_Q_Type = Existential then
-                  Current_Class := Sigma;
+                  Current_Class := Class_Sigma;
                else
-                  Current_Class := Pi;
+                  Current_Class := Class_Pi;
                end if;
             elsif Prefix(I).Q_Type /= Last_Q_Type then
                -- Alternation of Second_Order quantifiers
@@ -83,7 +83,7 @@ package body Tarski_Kuratowski is
       -- If the formula was purely arithmetical but passed to the analytical evaluator,
       -- it bounds to Δ^1_1
       if not Found_Second_Order then
-         return (Class => Delta, Level => 1, V_Order => Second_Order);
+         return (Class => Class_Delta, Level => 1, V_Order => Second_Order);
       end if;
 
       return (Class => Current_Class, Level => Current_Level, V_Order => Second_Order);
